@@ -4,3 +4,7 @@
 /Scripts
 /share
 pyvenv.cfg
+/lib
+/src
+/share
+/bin
