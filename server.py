@@ -41,7 +41,7 @@ def agent_portrayal(agent): #A color is assigned to each type of agent
         portrayal["h"] = 1
         portrayal["w"] = 1
         portrayal["Shape"] = "rect"
-        
+
     return portrayal
 
 simulation_params = {

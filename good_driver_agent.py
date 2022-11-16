@@ -1,7 +1,8 @@
 import mesa
 from road_agent import RoadAgent
-class GoodDriverAgent(mesa.Agent):
 
+class GoodDriverAgent(mesa.Agent):
+    
     def __init__(self, unique_id, model, value):
         super().__init__(unique_id, model)
         self.value = value
@@ -13,19 +14,17 @@ class GoodDriverAgent(mesa.Agent):
             direction = agent.directions[0]
         x,y = self.pos
         if direction == "north":
-            return(x,y-1)
-        """ if direction == "south":
+            return(x,y+1)
+        if direction == "south":
             return(x,y-1)
         if direction == "west":
-            return(x+1,y)
+            return(x-1,y)
         if direction == "east":
-            return(x+1,y) """
+            return(x+1,y) 
 
     def move(self):
-       """  possible_steps = self.model.grid.get_neighbors(
-            self.pos, moore=True, include_center=False
-        ) """
-        """ for agent in possible_steps: """
+        cellmates = self.model.grid.get_cell_list_contents([self.pos])
+        for agent in cellmates: 
             if type(agent) == RoadAgent:
                 new_position = self.getNextPosition(agent);
                 print(new_position)
