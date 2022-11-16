@@ -3,9 +3,10 @@ from road_agent import RoadAgent
 
 class GoodDriverAgent(mesa.Agent):
     
-    def __init__(self, unique_id, model, value):
+    def __init__(self, unique_id, model, value, velocity):
         super().__init__(unique_id, model)
         self.value = value
+        self.velocity = velocity
 
     def getNextPosition(self, agent):
         if len(agent.directions) > 1:
@@ -27,7 +28,6 @@ class GoodDriverAgent(mesa.Agent):
         for agent in cellmates: 
             if type(agent) == RoadAgent:
                 new_position = self.getNextPosition(agent);
-                print(new_position)
                 self.model.grid.move_agent(self, new_position)
                  
     def step(self):
