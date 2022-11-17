@@ -2,13 +2,12 @@ import mesa
 from road_agent import RoadAgent
 
 class GoodDriverAgent(mesa.Agent):
-    
     def __init__(self, unique_id, model, value, velocity):
         super().__init__(unique_id, model)
         self.value = value
         self.velocity = velocity
         self.priority = 1
-
+        
     def getNextPosition(self, agent):
         if len(agent.directions) > 1:
             direction = self.random.choice(agent.directions) 

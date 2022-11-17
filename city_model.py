@@ -32,13 +32,14 @@ class CityModel(mesa.Model):
                 # Revisar colisiones despues
                 if row == 0 and col == 0 and (col == 0 or col == 20) or row == 20 and (col == 0 or col == 20):
                     for i in range(round(agents/4)):
-                        id += self.addAgent(GoodDriverAgent(id, self, 1, 1), row, col) 
+                        velocity = random.randrange(1, 4, 1)
+                        id += self.addAgent(GoodDriverAgent(id, self, 1, velocity), row, col) 
                 if col == 10 and (row == 9):
-                        id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "east", "yellow", True), row, col) 
+                        id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "east", "yellow"), row, col) 
                 if col == 10 and (row == 19):
                         id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "east", "yellow"), row, col) 
                 if row == 10 and (col == 9):
-                        id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "north", "yellow", True), row, col) 
+                        id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "north", "yellow"), row, col) 
                 if row == 10 and (col == 19):
                         id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "north", "yellow"), row, col) 
                     

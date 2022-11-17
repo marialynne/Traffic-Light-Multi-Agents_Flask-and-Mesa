@@ -1,45 +1,45 @@
 import mesa
 import random
+import math
 from good_driver_agent import GoodDriverAgent
 
 class SmartTrafficLightAgent(mesa.Agent):
-    def __init__(self, unique_id, model, value, direction, color, mainLight = False):
+    def __init__(self, unique_id, model, value, direction, color = False):
         super().__init__(unique_id, model)
         self.color = color
         self.value = value
         self.direction = direction
-        self.priority = 0
+        self.priority = math.inf
         self.queue = []
         self.id = unique_id
-        self.mainLight = False
 
     def turnOn (self, intersectionLight):
         intersectionLight.changeStatus('red')
         self.changeStatus('green')
         
     def calculatePriority (self):
+        self.priority = math.inf
         agents = self.model.schedule.agents
         sameDirectionLight = list(filter(lambda agent: type(agent) == SmartTrafficLightAgent and agent.direction == self.direction and agent != self, agents))[0]
         intersectionLight = list(filter(lambda agent: type(agent) == SmartTrafficLightAgent and agent.direction != self.direction and agent.pos[1] < 19 and agent.pos[0] < 19, agents))[0]
 
-        if len(self.queue) <= 4:     # If I have less or eq to 4 cars waiting
-            totalPrioritySum = 0     # Calculate priority with sum of vehicles
-            for agent in self.queue:
-                print(agent[1])
-                totalPrioritySum += agent[1]
-            self.priority = totalPrioritySum
-        elif len(intersectionLight > 4):   # If the other light has more cars in queue priority is my qty of cars
-            self.priority = len(self.queue)
+        totalPrioritySum = 0     # Calculate priority with sum of vehicles
+        for agent in self.queue:
+            totalPrioritySum += agent[1]
+        if totalPrioritySum > 0: self.priority = totalPrioritySum
 
-        if self.priority > intersectionLight.priority:
-            self.turnOn(intersectionLight)
-        elif self.priority == intersectionLight.priority and (not self.queue and intersectionLight.queue):
-            randomLight = random.randrange(1, 2, 1)
-            if (randomLight < 2):
+        if len(self.queue) < 4:     # Use ETA if there are no more than 3 cars in line
+            if self.priority < intersectionLight.priority: # My cars are closer
                 self.turnOn(intersectionLight)
-            else:
-                intersectionLight.turnOn(sameDirectionLight)
-        
+            elif self.priority == intersectionLight.priority and (not self.queue and intersectionLight.queue):
+                randomLight = random.randrange(1, 2, 1)
+                if (randomLight < 2):
+                    self.turnOn(intersectionLight)
+                else:
+                    intersectionLight.turnOn(sameDirectionLight)
+        elif len(self.queue) > len(intersectionLight.queue):
+            self.turnOn(intersectionLight)
+
     def changeStatus(self, color):
         agents = self.model.schedule.agents
         sameDirectionLight = list(filter(lambda agent: type(agent) == SmartTrafficLightAgent and agent.direction == self.direction and agent != self, agents))[0]
