@@ -1,4 +1,5 @@
 import mesa
+import random
 from good_driver_agent import GoodDriverAgent
 
 class SmartTrafficLightAgent(mesa.Agent):
@@ -12,10 +13,9 @@ class SmartTrafficLightAgent(mesa.Agent):
         self.id = unique_id
         self.mainLight = False
 
-    def turnOn (self, intersectionLight, sameDirectionLight):
+    def turnOn (self, intersectionLight):
         intersectionLight.changeStatus('red')
         self.changeStatus('green')
-        sameDirectionLight.changeStatus('green')
         
     def calculatePriority (self):
         agents = self.model.schedule.agents
@@ -31,13 +31,20 @@ class SmartTrafficLightAgent(mesa.Agent):
         elif len(intersectionLight > 4):   # If the other light has more cars in queue priority is my qty of cars
             self.priority = len(self.queue)
 
-        if intersectionLight.priority < self.priority and intersectionLight.priority < sameDirectionLight.priority:
-            self.turnOn(intersectionLight, sameDirectionLight)
-        
-        # if self.color == 'yellow': self.turnOn(intersectionLight, sameDirectionLight) 
+        if self.priority > intersectionLight.priority:
+            self.turnOn(intersectionLight)
+        elif self.priority == intersectionLight.priority and (not self.queue and intersectionLight.queue):
+            randomLight = random.randrange(1, 2, 1)
+            if (randomLight < 2):
+                self.turnOn(intersectionLight)
+            else:
+                intersectionLight.turnOn(sameDirectionLight)
         
     def changeStatus(self, color):
+        agents = self.model.schedule.agents
+        sameDirectionLight = list(filter(lambda agent: type(agent) == SmartTrafficLightAgent and agent.direction == self.direction and agent != self, agents))[0]
         self.color = color
+        sameDirectionLight.color = color
 
     def addCarToQueue (self, agent, ETA):
         self.queue.append((agent, ETA))
@@ -60,12 +67,11 @@ class SmartTrafficLightAgent(mesa.Agent):
             if type(agent) == GoodDriverAgent:
                 if self.direction == "north":
                     _, agentY = agent.pos
-                    self.addCarToQueue(agent, (agent.velocity * (self.pos[1] - 1 - agentY)))
+                    self.addCarToQueue(agent, (agent.velocity * (self.pos[1] - agentY)))
                 if self.direction == "east":
                     agentX, _ = agent.pos
-                    self.addCarToQueue(agent, (agent.velocity * (self.pos[0] - 1 - agentX)))
+                    self.addCarToQueue(agent, (agent.velocity * (self.pos[0] - agentX)))
             
     def step(self):
-        print(self.queue)
         self.checkRoad()
         self.calculatePriority()
