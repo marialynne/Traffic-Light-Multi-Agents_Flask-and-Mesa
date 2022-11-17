@@ -7,6 +7,7 @@ class GoodDriverAgent(mesa.Agent):
         super().__init__(unique_id, model)
         self.value = value
         self.velocity = velocity
+        self.priority = 1
 
     def getNextPosition(self, agent):
         if len(agent.directions) > 1:
