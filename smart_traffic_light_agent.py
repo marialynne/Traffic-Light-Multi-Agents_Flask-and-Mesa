@@ -13,6 +13,12 @@ class SmartTrafficLightAgent(mesa.Agent):
         self.queue = []
         self.id = unique_id
 
+    def changeStatus(self, color):
+        agents = self.model.schedule.agents
+        sameDirectionLight = list(filter(lambda agent: type(agent) == SmartTrafficLightAgent and agent.direction == self.direction and agent != self, agents))[0]
+        self.color = color
+        sameDirectionLight.color = color
+        
     def turnOn (self, intersectionLight):
         intersectionLight.changeStatus('red')
         self.changeStatus('green')
@@ -39,12 +45,6 @@ class SmartTrafficLightAgent(mesa.Agent):
                     intersectionLight.turnOn(sameDirectionLight)
         elif len(self.queue) > len(intersectionLight.queue):
             self.turnOn(intersectionLight)
-
-    def changeStatus(self, color):
-        agents = self.model.schedule.agents
-        sameDirectionLight = list(filter(lambda agent: type(agent) == SmartTrafficLightAgent and agent.direction == self.direction and agent != self, agents))[0]
-        self.color = color
-        sameDirectionLight.color = color
 
     def addCarToQueue (self, agent, ETA):
         self.queue.append((agent, ETA))

@@ -34,14 +34,14 @@ class CityModel(mesa.Model):
                     for i in range(round(agents/4)):
                         velocity = random.randrange(1, 4, 1)
                         id += self.addAgent(GoodDriverAgent(id, self, 1, velocity), row, col) 
-                if col == 10 and (row == 9):
-                        id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "east", "yellow"), row, col) 
-                if col == 10 and (row == 19):
-                        id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "east", "yellow"), row, col) 
-                if row == 10 and (col == 9):
-                        id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "north", "yellow"), row, col) 
-                if row == 10 and (col == 19):
-                        id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "north", "yellow"), row, col) 
+                        
+                if (col == 10 and (row == 9 or row == 19)) or (col == 20 and row == 9):
+                    id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "east", "yellow"), row, col) 
+                if row == 10 and (col == 9 or col == 19):
+                    id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "north", "yellow"), row, col) 
+                if row == 20 and col == 11:
+                    id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "south", "yellow"), row, col) 
+
                     
     def addAgent(self, agent, row, col):
         self.schedule.add(agent)

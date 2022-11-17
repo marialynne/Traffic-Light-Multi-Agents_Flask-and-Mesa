@@ -39,6 +39,14 @@ def agent_portrayal(agent): #A color is assigned to each type of agent
             portrayal["heading_x"] = 0
             portrayal["heading_y"] = 1
             portrayal["Color"] = agent.color
+        if agent.direction == "south":
+            portrayal["heading_x"] = 0
+            portrayal["heading_y"] = -1
+            portrayal["Color"] = agent.color
+        if agent.direction == "west":
+            portrayal["heading_x"] = -1
+            portrayal["heading_y"] = 0
+            portrayal["Color"] = agent.color
     elif agent.value == 1:
         portrayal["Color"] = "blue"
         portrayal["Layer"] = 1
@@ -49,14 +57,16 @@ def agent_portrayal(agent): #A color is assigned to each type of agent
         portrayal["Layer"] = 0
         portrayal["h"] = 1
         portrayal["w"] = 1
-        
     return portrayal
 
 simulation_params = {
     "agents": UserSettableParameter(
-        "number",
+        "slider",
         "Number of Agents",
-        5,
+        value=4,
+        min_value=1,
+        max_value=30,
+        step=1,
         description="Number of Agents",
     ),
     "time": UserSettableParameter(
