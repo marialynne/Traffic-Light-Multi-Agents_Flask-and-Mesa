@@ -25,33 +25,30 @@ results = mesa.batch_run(
     display_progress=True,
 ) """
 
-def agent_portrayal(agent): #A color is assigned to each type of agent
+def agent_portrayal(agent): # A color is assigned to each type of agent
     portrayal = {"Shape": "circle", "Filled": "true"}
-    if agent.value == 2:
+    if agent.layerLevel == 2: # Traffic Lights
         portrayal["Shape"] = "arrowHead"
         portrayal["Layer"] = 2
         portrayal["scale"] = 0.8
+        portrayal["Color"] = agent.color
         if agent.direction == "east":
             portrayal["heading_x"] = 1
             portrayal["heading_y"] = 0
-            portrayal["Color"] = agent.color
-        if agent.direction == "north":
+        elif agent.direction == "north":
             portrayal["heading_x"] = 0
             portrayal["heading_y"] = 1
-            portrayal["Color"] = agent.color
-        if agent.direction == "south":
+        elif agent.direction == "south":
             portrayal["heading_x"] = 0
             portrayal["heading_y"] = -1
-            portrayal["Color"] = agent.color
-        if agent.direction == "west":
+        elif agent.direction == "west":
             portrayal["heading_x"] = -1
             portrayal["heading_y"] = 0
-            portrayal["Color"] = agent.color
-    elif agent.value == 1:
+    elif agent.layerLevel == 1: # Cars
         portrayal["Color"] = "blue"
         portrayal["Layer"] = 1
         portrayal["r"] = 0.8
-    else:
+    else: # Road
         portrayal["Shape"] = "rect"
         portrayal["Color"] = "black"
         portrayal["Layer"] = 0

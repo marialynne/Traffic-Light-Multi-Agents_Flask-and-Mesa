@@ -29,20 +29,19 @@ class CityModel(mesa.Model):
                     id += self.addAgent(RoadAgent(id, self, ["north", "east"], 0), row, col) 
                 if row == 10 and col == 0:
                     id += self.addAgent(RoadAgent(id, self, ["north", "west"], 0), row, col) 
-                # Revisar colisiones despues
+                # Revisar colisiones despues y que se generen bien los agentes por cada casilla
                 if row == 0 and col == 0 and (col == 0 or col == 20) or row == 20 and (col == 0 or col == 20):
                     for i in range(round(agents/4)):
                         velocity = random.randrange(1, 4, 1)
                         id += self.addAgent(GoodDriverAgent(id, self, 1, velocity), row, col) 
                         
                 if (col == 10 and (row == 9 or row == 19)) or (col == 20 and row == 9):
-                    id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "east", "yellow"), row, col) 
+                    id += self.addAgent(SmartTrafficLightAgent(id, self, 2, 8, "east", "yellow"), row, col) 
                 if row == 10 and (col == 9 or col == 19):
-                    id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "north", "yellow"), row, col) 
+                    id += self.addAgent(SmartTrafficLightAgent(id, self, 2, 8, "north", "yellow"), row, col) 
                 if row == 20 and col == 11:
-                    id += self.addAgent(SmartTrafficLightAgent(id, self, 2, "south", "yellow"), row, col) 
+                    id += self.addAgent(SmartTrafficLightAgent(id, self, 2, 8, "south", "yellow"), row, col) 
 
-                    
     def addAgent(self, agent, row, col):
         self.schedule.add(agent)
         self.grid.place_agent(agent,(row, col))
@@ -50,15 +49,12 @@ class CityModel(mesa.Model):
                     
     def step(self):
         self.schedule.step()
-        """ if CityModel.stopSimulation(self):
-            self.running=False """
-        self.time-=1
+        CityModel.stopSimulation(self)
 
     # Modificar despues
-    """ @staticmethod
+    @staticmethod
     def stopSimulation(model):
-        return [1 for agent in model.schedule.agents if type(agent) == RoombaAgent or model.time == 0]
-
-
-
-         """
+        model.time-=1
+        for agent in model.schedule.agents:
+            if type(agent) == GoodDriverAgent or model.time == 0:
+                model.running=False 
