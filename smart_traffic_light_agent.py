@@ -12,18 +12,14 @@ class SmartTrafficLightAgent(mesa.Agent):
         self.color = color
         self.priority = math.inf
         self.queue = []
+        #self.totalPrioritySum = 0
 
-    """ def changeStatus(self, color):
-        agents = self.model.schedule.agents
-        sameDirectionLight = list(filter(lambda agent: type(agent) == SmartTrafficLightAgent and agent.direction == self.direction and agent != self, agents))[0]
+    def changeStatus(self, color):
         self.color = color
-        sameDirectionLight.color = color
         
-    def turnOn (self, intersectionLight):
+    """ def turnOn (self, intersectionLight):
         intersectionLight.changeStatus('red')
-        self.changeStatus('green')
-        
-    """
+        self.changeStatus('green') """
     
     """ def calculatePriority (self):
         self.priority = math.inf
@@ -49,19 +45,26 @@ class SmartTrafficLightAgent(mesa.Agent):
         elif len(self.queue) > len(intersectionLight.queue):
             self.turnOn(intersectionLight)  """
 
+    def calculatePriority(self):
+        self.priority = math.inf
+        totalPrioritySum = 0
+        for agent in self.queue:
+            totalPrioritySum += agent[1]
+        if totalPrioritySum > 0: self.priority = totalPrioritySum
+
     def addCarToQueue (self, agent, ETA):
         self.queue.append((agent, ETA))
-    
+
     def checkRoad(self):
         x,y = self.pos
         cellRange = []
         self.queue = []
-        for cell in range(1, self.scanRangeNumber):
+        for cell in range(0, self.scanRangeNumber):
             if self.direction == "north": cellRange.append((x, y - cell))
             elif self.direction == "east": cellRange.append((x - cell, y))
-            if self.direction == "south": cellRange.append((x, y + cell))
-            if self.direction == "west": cellRange.append((x + cell, y))
-            
+            elif self.direction == "south": cellRange.append((x, y + cell))
+            elif self.direction == "west": cellRange.append((x + cell, y))
+
         matesInCellPosition = self.model.grid.get_cell_list_contents(cellRange)
         
         for agentIndex in range(0, len(matesInCellPosition)):
@@ -69,10 +72,10 @@ class SmartTrafficLightAgent(mesa.Agent):
             if type(agent) == DriverAgent:
                 agentX,agentY = agent.pos
                 if self.direction == "north": self.addCarToQueue(agent, (agent.velocity * (self.pos[1] - agentY))) # Revisar bien orientacion
-                if self.direction == "east": self.addCarToQueue(agent, (agent.velocity * (self.pos[0] - agentX)))
-                if self.direction == "south": self.addCarToQueue(agent, (agent.velocity * (agentY - self.pos[1])))
-                if self.direction == "west": self.addCarToQueue(agent, (agent.velocity * (agentX - self.pos[0])))
+                elif self.direction == "east": self.addCarToQueue(agent, (agent.velocity * (self.pos[0] - agentX)))
+                elif self.direction == "south": self.addCarToQueue(agent, (agent.velocity * (agentY - self.pos[1])))
+                elif self.direction == "west": self.addCarToQueue(agent, (agent.velocity * (agentX - self.pos[0])))
             
     def step(self):
         self.checkRoad()
-        #self.calculatePriority()
+        self.calculatePriority()

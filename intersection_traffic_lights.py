@@ -1,5 +1,6 @@
 import mesa
 import random
+from driver_agent import DriverAgent
 from smart_traffic_light_agent import SmartTrafficLightAgent
 
 class IntersectionTrafficLightsAgent(mesa.Agent):
@@ -10,12 +11,26 @@ class IntersectionTrafficLightsAgent(mesa.Agent):
         self.layerLevel = layerLevel
         
     def chechPriorities(self):
-        if self.smt1.priority > self.smt2priority:
-            self.smt1.color = "green"
-            self.smt2.color = "red"
-        else:
-            self.smt2.color = "green"
-            self.smt1.color = "red"
+        agentsInCell = self.model.grid.get_cell_list_contents([self.pos])
+        print(agentsInCell)
+        if not DriverAgent in agentsInCell:
+            if self.smt1.priority < self.smt2.priority:
+                self.smt1.changeStatus("green")
+                self.smt2.changeStatus("red")
+            elif self.smt1.priority > self.smt2.priority:
+                self.smt2.changeStatus("green")
+                self.smt1.changeStatus("red")
+            elif self.smt1.priority == self.smt2.priority and (not self.smt1.queue and not self.smt2.queue):
+                randomLight = random.randrange(1, 2, 1)
+                if randomLight == 1: 
+                    self.smt2.changeStatus("green")
+                    self.smt1.changeStatus("red")
+                elif randomLight == 2:
+                    self.smt1.changeStatus("green")
+                    self.smt2.changeStatus("red")
+                
+        print('1', self.smt1.priority)
+        print('2', self.smt2.priority)
         
     def step(self):
         self.chechPriorities()
