@@ -3,27 +3,21 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from mesa.visualization.UserParam import UserSettableParameter
 
-PIXELS_GRID = 500
+PIXELS_GRID = 600
 
-""" 
-params = {
-    "agents": 1,
-    "rows": 10,
-    "columns": 10,
-    "x_start": 0,
-    "y_start": 0,
-    "percentage_dirty_cells": 45,
-    "moves": 25
+""" params = {
+    "agents": 5,
+    "time": 25
 }
 results = mesa.batch_run(
-    RoomModel,
+    CityModel,
     parameters=params,
-    iterations=5,
+    iterations=100,
     max_steps=100,  # time
     number_processes=1,
     data_collection_period=1,
     display_progress=True,
-) """
+)  """
 
 def agent_portrayal(agent): # A color is assigned to each type of agent
     portrayal = {"Shape": "circle", "Filled": "true"}
@@ -84,7 +78,7 @@ def get_current_move(model):
 
  """
 grid = mesa.visualization.CanvasGrid(
-    agent_portrayal, 21, 21, 600, 600)
+    agent_portrayal, 21, 21, PIXELS_GRID, PIXELS_GRID)
 
 server = mesa.visualization.ModularServer(
     CityModel, [

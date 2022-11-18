@@ -1,5 +1,4 @@
 import mesa
-import random
 import math
 from driver_agent import DriverAgent
 
@@ -12,39 +11,10 @@ class SmartTrafficLightAgent(mesa.Agent):
         self.color = color
         self.priority = math.inf
         self.queue = []
-        #self.totalPrioritySum = 0
 
     def changeStatus(self, color):
         self.color = color
         
-    """ def turnOn (self, intersectionLight):
-        intersectionLight.changeStatus('red')
-        self.changeStatus('green') """
-    
-    """ def calculatePriority (self):
-        self.priority = math.inf
-        agents = self.model.schedule.agents
-        northDirectionLight = list(filter(lambda agent: type(agent) == SmartTrafficLightAgent and agent.direction == "north" and agent != self, agents))[0]
-        sameDirectionLight = list(filter(lambda agent: type(agent) == SmartTrafficLightAgent and agent.direction == self.direction and agent != self, agents))[0]
-        intersectionLight = list(filter(lambda agent: type(agent) == SmartTrafficLightAgent and agent.direction != self.direction and agent.pos[1] < 19 and agent.pos[0] < 19, agents))[0]
-
-        totalPrioritySum = 0     # Calculate priority with sum of vehicles
-        for agent in self.queue:
-            totalPrioritySum += agent[1]
-        if totalPrioritySum > 0: self.priority = totalPrioritySum
-
-        if len(self.queue) < 4:     # Use ETA if there are no more than 3 cars in line
-            if self.priority < intersectionLight.priority: # My cars are closer
-                self.turnOn(intersectionLight)
-            elif self.priority == intersectionLight.priority and (not self.queue and intersectionLight.queue):
-                randomLight = random.randrange(1, 2, 1)
-                if (randomLight < 2):
-                    self.turnOn(intersectionLight)
-                else:
-                    intersectionLight.turnOn(sameDirectionLight)
-        elif len(self.queue) > len(intersectionLight.queue):
-            self.turnOn(intersectionLight)  """
-
     def calculatePriority(self):
         self.priority = math.inf
         totalPrioritySum = 0

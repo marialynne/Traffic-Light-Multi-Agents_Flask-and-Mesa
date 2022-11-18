@@ -12,7 +12,6 @@ class IntersectionTrafficLightsAgent(mesa.Agent):
         
     def chechPriorities(self):
         agentsInCell = self.model.grid.get_cell_list_contents([self.pos])
-        print(agentsInCell)
         if not DriverAgent in agentsInCell:
             if self.smt1.priority < self.smt2.priority:
                 self.smt1.changeStatus("green")
@@ -28,9 +27,6 @@ class IntersectionTrafficLightsAgent(mesa.Agent):
                 elif randomLight == 2:
                     self.smt1.changeStatus("green")
                     self.smt2.changeStatus("red")
-                
-        print('1', self.smt1.priority)
-        print('2', self.smt2.priority)
         
     def step(self):
         self.chechPriorities()
