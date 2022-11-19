@@ -2,9 +2,9 @@ import mesa
 import numpy as np
 import random
 from road_agent import RoadAgent
-from smart_traffic_light_agent import SmartTrafficLightAgent
+from smart_traffic_light_agent import SmartTrafficLightAgent, DriverAgent
 from intersection_traffic_lights import IntersectionTrafficLightsAgent
-from driver_agent import DriverAgent
+#from driver_agent import DriverAgent
 
 class CityModel(mesa.Model):     
     def __init__(self, agents, time):
