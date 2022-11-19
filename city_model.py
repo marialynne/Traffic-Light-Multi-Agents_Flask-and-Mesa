@@ -33,24 +33,24 @@ class CityModel(mesa.Model):
                     self.addAgent(RoadAgent(self.next_id(), self, ["north", "west"]), row, col) 
                 # First intersection
                 if (col == 10 and row == 9): 
-                    smt1 = SmartTrafficLightAgent(self.next_id(), self, 9, "east")
+                    smt1 = SmartTrafficLightAgent(self.next_id(), self, 9, "east", DriverAgent(self.next_id(), self, 0, 0))
                     self.addAgent(smt1, row, col) 
                 if (col == 9 and row == 10): 
-                    smt2 = SmartTrafficLightAgent(self.next_id(), self, 9, "north")
+                    smt2 = SmartTrafficLightAgent(self.next_id(), self, 9, "north", DriverAgent(self.next_id(), self, 0, 0))
                     self.addAgent(smt2, row, col) 
                 # Second intersection
                 if (col == 20 and row == 9): 
-                    smt3 = SmartTrafficLightAgent(self.next_id(), self, 9, "east")
+                    smt3 = SmartTrafficLightAgent(self.next_id(), self, 9, "east", DriverAgent(self.next_id(), self, 0, 0))
                     self.addAgent(smt3, row, col) 
                 if (col == 19 and row == 10): 
-                    smt4 = SmartTrafficLightAgent(self.next_id(), self, 9, "north")
+                    smt4 = SmartTrafficLightAgent(self.next_id(), self, 9, "north", DriverAgent(self.next_id(), self, 0, 0))
                     self.addAgent(smt4, row, col)
                 # Third intersection
                 if (col == 11 and row == 20): 
-                    smt5 = SmartTrafficLightAgent(self.next_id(), self, 9, "south")
+                    smt5 = SmartTrafficLightAgent(self.next_id(), self, 9, "south", DriverAgent(self.next_id(), self, 0, 0))
                     self.addAgent(smt5, row, col) 
                 if (col == 10 and row == 19): 
-                    smt6 = SmartTrafficLightAgent(self.next_id(), self, 9, "east")
+                    smt6 = SmartTrafficLightAgent(self.next_id(), self, 9, "east", DriverAgent(self.next_id(), self, 0, 0))
                     self.addAgent(smt6, row, col) 
         # Add intersections
         self.addAgent(IntersectionTrafficLightsAgent(self.next_id(), self, smt1, smt2), 10, 10)
@@ -69,8 +69,9 @@ class CityModel(mesa.Model):
         corners = [(0, 0), (20, 0), (0, 20), (20, 20)]
         index = self.steps % 4
         velocity = random.randrange(1, 4, 1)
+        driverType = 1
         row, col = corners[index]
-        self.addAgent(DriverAgent(self.next_id(), self, velocity), row, col)
+        self.addAgent(DriverAgent(self.next_id(), self, velocity, driverType), row, col)
                   
     def run_model(self) -> None:
         while self.running:

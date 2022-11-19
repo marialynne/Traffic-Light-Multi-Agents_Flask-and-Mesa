@@ -7,5 +7,5 @@ class RoadAgent(mesa.Agent):
         self.directions = directions
         self.layerLevel = layerLevel
 
-    def step(self):
-        return
+    def step(self) -> None:
+        pass
