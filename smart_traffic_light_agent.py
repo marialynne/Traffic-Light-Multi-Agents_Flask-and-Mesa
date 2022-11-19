@@ -59,6 +59,7 @@ class DriverAgent(mesa.Agent):
         super().__init__(unique_id, model)
         self.layerLevel = layerLevel
         self.velocity = velocity
+        self.velocityIndex = 0
         self.priority = 1
         
     # Funcion que determina que debe para cuando exista un coche adelante
@@ -110,5 +111,10 @@ class DriverAgent(mesa.Agent):
                 self.model.grid.move_agent(self, new_position)
                  
     def step(self):
-        self.move() 
+        print("velocity: ", self.velocity, ", velocityIndex:", self.velocityIndex)
+        if(self.velocityIndex <= self.velocity):
+            self.velocityIndex += 1
+        else:
+            self.velocityIndex = 0
+            self.move() 
 
