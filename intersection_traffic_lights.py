@@ -1,7 +1,5 @@
 import mesa
 import random
-#from driver_agent import DriverAgent
-from smart_traffic_light_agent import SmartTrafficLightAgent, DriverAgent
 
 class IntersectionTrafficLightsAgent(mesa.Agent):
     def __init__(self, unique_id, model, smt1, smt2, layerLevel = 0):
@@ -10,23 +8,27 @@ class IntersectionTrafficLightsAgent(mesa.Agent):
         self.smt2 = smt2
         self.layerLevel = layerLevel
         
-    def chechPriorities(self):
-        agentsInCell = self.model.grid.get_cell_list_contents([self.pos])
-        if not DriverAgent in agentsInCell:
-            if self.smt1.priority < self.smt2.priority:
-                self.smt1.changeStatus("green")
-                self.smt2.changeStatus("red")
-            elif self.smt1.priority > self.smt2.priority:
-                self.smt2.changeStatus("green")
-                self.smt1.changeStatus("red")
-            elif self.smt1.priority == self.smt2.priority and (not self.smt1.queue and not self.smt2.queue):
-                randomLight = random.randrange(1, 2, 1)
-                if randomLight == 1: 
-                    self.smt2.changeStatus("green")
-                    self.smt1.changeStatus("red")
-                elif randomLight == 2:
-                    self.smt1.changeStatus("green")
-                    self.smt2.changeStatus("red")
+    def changeTrafficLight(self, smt1Color, smt2Color) -> None:
+        self.smt1.changeStatus(smt1Color)
+        self.smt2.changeStatus(smt2Color)
         
-    def step(self):
-        self.chechPriorities()
+    def calculatePriority(self) -> None:
+        # Falta determinar cuando el ETA es menor que el otro semaforo 
+        if (self.smt1.congestion > self.smt2.congestion) or (self.smt1.firstETA < self.smt2.firstETA): 
+            self.changeTrafficLight("green","red")
+        elif (self.smt1.congestion < self.smt2.congestion) or (self.smt1.firstETA > self.smt2.firstETA): 
+            self.changeTrafficLight("red","green")
+        # Equal congestion
+        elif (self.smt1.congestion == self.smt2.congestion) and (len(self.smt1.queue) > 0 and len(self.smt2.queue) > 0):
+            # Gets the pass the fastest driver, agent with lower ETA
+            if self.smt1.firstETA < self.smt2.firstETA: 
+                self.changeTrafficLight("green","red") 
+            elif self.smt1.firstETA > self.smt2.firstETA:
+                self.changeTrafficLight("red","green")
+            else: # they have the same ETA
+                randomLight = random.choice([True, False])
+                if randomLight: self.changeTrafficLight("green","red")
+                else: self.changeTrafficLight("red","green")
+        
+    def step(self) -> None:
+        self.calculatePriority()
