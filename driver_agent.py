@@ -31,7 +31,6 @@ class DriverAgent(mesa.Agent):
             self.model.grid.move_agent(self,newPosition)
             self.velocityIndex = 0
             
-
     def checkMovement(self, cellmates) -> tuple:
         for agent in cellmates:
             newMoveMates = self.model.grid.get_cell_list_contents([self.getNextPosition(agent)])

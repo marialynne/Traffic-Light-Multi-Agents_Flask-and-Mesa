@@ -14,15 +14,20 @@ class IntersectionTrafficLightsAgent(mesa.Agent):
         self.smt2.changeStatus(smt2Color)
         
     def calculatePriority(self) -> None:
-        # Falta la parte de ambulancias
         agentsInCell = self.model.grid.get_cell_list_contents([self.pos])
         if not type(self.driverSample) in agentsInCell:
+            
+            if (self.smt1.hasAnAmbulance):
+                self.changeTrafficLight("green","red")
+            elif (self.smt2.hasAnAmbulance):
+                self.changeTrafficLight("green","red")
+
             if (self.smt1.congestion > self.smt2.congestion) or (self.smt1.firstETA < self.smt2.firstETA): 
                 self.changeTrafficLight("green","red")
             elif (self.smt1.congestion < self.smt2.congestion) or (self.smt1.firstETA > self.smt2.firstETA): 
                 self.changeTrafficLight("red","green")
             # Equal congestion
-            elif (self.smt1.congestion == self.smt2.congestion) and (len(self.smt1.queue) > 0 and len(self.smt2.queue) > 0):
+            elif ((self.smt1.congestion == self.smt2.congestion) and (len(self.smt1.queue) > 0 and len(self.smt2.queue) > 0) or (self.smt1.hasAnAmbulance and self.smt2.hasAnAmbulance)):
                 # Gets the pass the fastest driver, agent with lower ETA
                 if self.smt1.firstETA < self.smt2.firstETA: 
                     self.changeTrafficLight("green","red") 

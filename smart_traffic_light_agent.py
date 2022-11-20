@@ -11,7 +11,7 @@ class SmartTrafficLightAgent(mesa.Agent):
         self.congestion = 0
         self.queue = []
         self.firstETA = math.inf
-        self.haveAmbulance = False
+        self.hasAnAmbulance = False
         self.driversSample = driversSample
         
     def changeStatus(self, color) -> None:
@@ -56,8 +56,8 @@ class SmartTrafficLightAgent(mesa.Agent):
         # Add drivres to queue
         self.addCarToQueue(matesInCellPosition)
         # Search for an ambulance in the queue
-        if(self.searchAmbulance(matesInCellPosition)): self.haveAmbulance = True
-        else: self.haveAmbulance = False
+        if(self.searchAmbulance(matesInCellPosition)): self.hasAnAmbulance = True
+        else: self.hasAnAmbulance = False
         
     def step(self) -> None:
         self.checkRoad() # Check the road for drivers or ambulances

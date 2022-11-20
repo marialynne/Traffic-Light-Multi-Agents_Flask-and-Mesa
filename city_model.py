@@ -17,6 +17,19 @@ class CityModel(mesa.Model):
         self.time = time
         self.steps = 0
         driverSample = DriverAgent(self.next_id(), self, 0, 0)
+        self.crashes = 0
+        self.congestion = 0
+        self.sanity = 0
+        self.TimeOfTrafficLightOn = 0
+        self.successRateWithoutCrash = 0
+        self.datacollector = mesa.DataCollector(
+            model_reporters= {
+            'Crashes': lambda m: m.crashes,
+            'Congestion': lambda m: m.congestion,
+            'Sanity': lambda m: m.sanity,
+            'TimeOfTrafficLightOn': lambda m: m.TimeOfTrafficLightOn,
+            'SuccessRateWithoutCrash': lambda m: m.successRateWithoutCrash}
+        ) 
         # Add agents
         for row in range (rows):
             for col in range (columns):
