@@ -1,5 +1,4 @@
 import mesa
-import random
 from road_agent import RoadAgent
 from smart_traffic_light_agent import SmartTrafficLightAgent
 from intersection_traffic_lights import IntersectionTrafficLightsAgent
@@ -7,6 +6,31 @@ from driver_agent import DriverAgent
 rows = 21
 columns = 21
 
+# Funciones se modifica segun heurisitca de cada quien 
+def getNumberOfCrashes(model) -> int:
+    return 1
+
+def getCurrentCongestion(model) -> int:
+    return 1
+
+def getSanity(model) -> int:
+    return 1
+
+def getTimeOfTrafficLightOn(model) -> int:
+    return 1
+
+def getsuccessRateWithoutCrash(model) -> int:
+    return 1
+
+def getMovesByDriver(model) -> int:
+    return 1
+
+# De aqui solo se modifca el 'driverType'
+# 1 -> GoodDriver
+# 2 -> Ambulance
+# 3 -> CrazyDriver
+# 4 -> WannaBeCrazyDriver
+# 5 -> Mix of drivers or truck, it's up to you
 class CityModel(mesa.Model):     
     def __init__(self, agents, time):
         self.schedule = mesa.time.RandomActivationByType(self)
@@ -16,19 +40,22 @@ class CityModel(mesa.Model):
         self.running = True
         self.time = time
         self.steps = 0
-        driverSample = DriverAgent(self.next_id(), self, 0, 0)
-        self.crashes = 0
-        self.congestion = 0
-        self.sanity = 0
-        self.TimeOfTrafficLightOn = 0
-        self.successRateWithoutCrash = 0
+        driverSample = DriverAgent(self.next_id(), self, 0)
+        self.driverType = 1 # Solo se modifica segun el driver de cada quien
+        self.crashes = getNumberOfCrashes(self)
+        self.congestion = getCurrentCongestion(self)
+        self.sanity = getSanity(self)
+        self.TimeOfTrafficLightOn = getTimeOfTrafficLightOn(self)
+        self.successRateWithoutCrash = getsuccessRateWithoutCrash(self)
+        self.MovesByDriver = getMovesByDriver(self)
         self.datacollector = mesa.DataCollector(
             model_reporters= {
             'Crashes': lambda m: m.crashes,
             'Congestion': lambda m: m.congestion,
             'Sanity': lambda m: m.sanity,
             'TimeOfTrafficLightOn': lambda m: m.TimeOfTrafficLightOn,
-            'SuccessRateWithoutCrash': lambda m: m.successRateWithoutCrash}
+            'SuccessRateWithoutCrash': lambda m: m.successRateWithoutCrash,
+            'MovesByDriver': lambda m: m.MovesByDriver}
         ) 
         # Add agents
         for row in range (rows):
@@ -82,10 +109,8 @@ class CityModel(mesa.Model):
     def createDriver(self) -> None:
         corners = [(0, 0), (20, 0), (0, 20), (20, 20)]
         index = self.steps % 4
-        velocity = random.randrange(1, 4, 1)
-        driverType = 1
         row, col = corners[index]
-        self.addAgent(DriverAgent(self.next_id(), self, velocity, driverType), row, col)
+        self.addAgent(DriverAgent(self.next_id(), self, self.driverType), row, col)
                   
     def run_model(self) -> None:
         while self.running:

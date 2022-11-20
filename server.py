@@ -1,11 +1,14 @@
 from city_model import *
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 from mesa.visualization.UserParam import UserSettableParameter
+from mesa.visualization.modules import ChartModule
+
 
 PIXELS_GRID = 600
 
-""" params = {
+params = {
     "agents": 5,
     "time": 25
 }
@@ -13,11 +16,11 @@ results = mesa.batch_run(
     CityModel,
     parameters=params,
     iterations=100,
-    max_steps=100,  # time
+    max_steps=500,  # time
     number_processes=1,
     data_collection_period=1,
     display_progress=True,
-)  """
+)  
 
 def agent_portrayal(agent): # A color is assigned to each type of agent
     portrayal = {"Shape": "circle", "Filled": "true"}
@@ -68,21 +71,25 @@ simulation_params = {
     )
 }
 
+chartCrashes = ChartModule([{"Label": "Crashes", "Color": "Red"}], data_collector_name='datacollector')
+chartCongestion = ChartModule([{"Label": "Congestion", "Color": "Red"}], data_collector_name='datacollector')
+chartSanity = ChartModule([{"Label": "Sanity", "Color": "Red"}], data_collector_name='datacollector')
+chartTimeOfTrafficLightOn = ChartModule([{"Label": "TimeOfTrafficLightOn", "Color": "Blue"}], data_collector_name='datacollector')
+chartSuccessRateWithoutCrash = ChartModule([{"Label": "SuccessRateWithoutCrash", "Color": "Blue"}], data_collector_name='datacollector')
+chartMovesByDriver = ChartModule([{"Label": "MovesByDriver", "Color": "Blue"}], data_collector_name='datacollector')
 
-""" def get_clean_percentage(model):
-    return f"Percentage of clean cells: {model.clean_percentage:.2f} %"
-
-
-def get_current_move(model):
-    return f"Time to finish: {model.timeToEnd}"
-
- """
 grid = mesa.visualization.CanvasGrid(
     agent_portrayal, 21, 21, PIXELS_GRID, PIXELS_GRID)
 
 server = mesa.visualization.ModularServer(
-    CityModel, [
-        grid], "Smart Traffic Light", simulation_params
+    CityModel, [grid,
+                chartCrashes,
+                chartSanity,
+                chartCongestion,
+                chartTimeOfTrafficLightOn,
+                chartSuccessRateWithoutCrash,
+                chartMovesByDriver], 
+    "Smart Traffic Light", simulation_params
 )
 
 server.port = 8524

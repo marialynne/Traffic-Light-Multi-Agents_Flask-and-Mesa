@@ -4,12 +4,15 @@ from intersection_traffic_lights import IntersectionTrafficLightsAgent
 from smart_traffic_light_agent import SmartTrafficLightAgent
 
 class DriverAgent(mesa.Agent):
-    def __init__(self, unique_id, model, velocity, layerLevel = 1):
+    def __init__(self, unique_id, model, driverType, layerLevel = 1):
         super().__init__(unique_id, model)
         self.layerLevel = layerLevel
-        self.velocity = velocity
-        self.isPriority = False
         self.velocityIndex = 0
+        self.driverType = driverType
+        # Los siguientes se modifican segun el driver
+        self.velocity = 2
+        self.isPriority = False # Ambulance
+        self.sanity = 0
     
     def getNextPosition(self, agent) -> None:
         if len(agent.directions) > 1:
