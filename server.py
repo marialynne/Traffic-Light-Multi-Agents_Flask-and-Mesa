@@ -1,4 +1,5 @@
-from city_model import *
+from city_model import CityModel
+import mesa
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -6,6 +7,21 @@ from mesa.visualization.UserParam import UserSettableParameter
 from mesa.visualization.modules import ChartModule, CanvasGrid
 
 PIXELS_GRID = 600
+
+
+""" params = {
+    "agents": 5,
+    "time": 25
+}
+results = mesa.batch_run(
+    CityModel,
+    parameters=params,
+    iterations=10,
+    max_steps=50,  # time
+    number_processes=1,
+    data_collection_period=1,
+    display_progress=True,
+) """
 
 def agent_portrayal(agent): # A color is assigned to each type of agent
     portrayal = {"Shape": "circle", "Filled": "true"}
@@ -55,20 +71,7 @@ simulation_params = {
         description="Time to end",
     )
 }
-
-""" params = {
-    "agents": 5,
-    "time": 25
-}
-results = mesa.batch_run(
-    CityModel,
-    parameters=params,
-    iterations=10,
-    max_steps=500,  # time
-    number_processes=1,
-    data_collection_period=1,
-    display_progress=True,
-)   """
+  
 
 chartCrashes = ChartModule([{"Label": "Crashes", "Color": "Red"}], data_collector_name='datacollector')
 chartCongestion = ChartModule([{"Label": "Congestion", "Color": "Red"}], data_collector_name='datacollector')
@@ -90,5 +93,5 @@ server = mesa.visualization.ModularServer(
     "Smart Traffic Light", simulation_params
 )
 
-server.port = 8524
+server.port = 8525
 server.launch()

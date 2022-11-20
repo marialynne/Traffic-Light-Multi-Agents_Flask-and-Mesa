@@ -9,6 +9,9 @@ class IntersectionTrafficLightsAgent(mesa.Agent):
         self.layerLevel = layerLevel
         self.driverSample = driverSample
         
+    def getCongestion(self):
+        return self.smt1.congestion + self.smt1.congestion
+        
     def changeTrafficLight(self, smt1Color, smt2Color) -> None:
         self.smt1.changeStatus(smt1Color)
         self.smt2.changeStatus(smt2Color)

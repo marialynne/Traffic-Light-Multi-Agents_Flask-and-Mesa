@@ -21,8 +21,10 @@ class CityModel(mesa.Model):
         self.running = True
         self.time = time
         self.steps = 0
+        self.crashes = 0
+        self.moves = 0
         driverSample = DriverAgent(self.next_id(), self, 0)
-        self.driverType = 1 # Solo se modifica segun el driver de cada quien
+        self.driverType = 4 # Solo se modifica segun el driver de cada quien
         self.datacollector = mesa.DataCollector(
             model_reporters= {
             'Crashes': CityModel.getNumberOfCrashes,
@@ -95,19 +97,33 @@ class CityModel(mesa.Model):
         self.schedule.step()
         if self.steps < self.agents: self.createDriver()
         self.steps += 1
+        self.datacollector.collect(self)
         
     # Funciones se modifica segun heurisitca de cada quien 
     @staticmethod
-    def getNumberOfCrashes(model) -> int:
-        return 1
-
+    def getNumberOfCrashes(model) -> int: # to do
+        intersections = [agent for agent in model.schedule.agents if type(agent) == IntersectionTrafficLightsAgent]
+        for intersection in intersections:
+            agentsInCell =  model.grid.get_cell_list_contents([intersection.pos]) 
+            for agent in agentsInCell:
+                if type(agent) == DriverAgent and len(agentsInCell) >= 4: model.crashes += 1
+        return model.crashes
+    
     @staticmethod
-    def getCurrentCongestion(model) -> int:
-        return 1
+    def getCurrentCongestion(model) -> int: # to do 
+        currentCongestion = 0
+        intersections = [agent for agent in model.schedule.agents if type(agent) == IntersectionTrafficLightsAgent]
+        for intersection in intersections:
+            currentCongestion += intersection.getCongestion()
+        return currentCongestion
 
     @staticmethod
     def getSanity(model) -> int:
-        return 1
+        currentSanity = 0
+        drivers = [agent for agent in model.schedule.agents if type(agent) == DriverAgent]
+        for driver in drivers:
+            currentSanity += driver.getSanity()
+        return currentSanity
 
     @staticmethod
     def getTimeOfTrafficLightOn(model) -> int:
@@ -119,4 +135,7 @@ class CityModel(mesa.Model):
 
     @staticmethod
     def getMovesByDriver(model) -> int:
-        return 1
+        drivers = [agent for agent in model.schedule.agents if type(agent) == DriverAgent]
+        for driver in drivers:
+            model.moves += driver.getMoves()
+        return model.moves
