@@ -2,7 +2,7 @@ import mesa
 import math
 
 class SmartTrafficLightAgent(mesa.Agent):
-    def __init__(self, unique_id, model, scanRangeNumber, direction, sample, color = "yellow", layerLevel = 2):
+    def __init__(self, unique_id, model, scanRangeNumber, direction, driversSample, color = "yellow", layerLevel = 2):
         super().__init__(unique_id, model)
         self.layerLevel = layerLevel
         self.scanRangeNumber = scanRangeNumber
@@ -12,11 +12,8 @@ class SmartTrafficLightAgent(mesa.Agent):
         self.queue = []
         self.firstETA = math.inf
         self.haveAmbulance = False
-        self.sample = sample
-    
-    def isGreen(self) -> bool:
-        return[str(self.color) == "green"]
-    
+        self.driversSample = driversSample
+        
     def changeStatus(self, color) -> None:
         self.color = color
         
@@ -32,13 +29,13 @@ class SmartTrafficLightAgent(mesa.Agent):
     def searchAmbulance(self, matesInCellPosition) -> bool:
         for agentIndex in range(0, len(matesInCellPosition)):
             agent = matesInCellPosition[agentIndex]
-            return [type(agent) == type(self.sample) and agent.isPriority]
+            return [type(agent) == type(self.driversSample) and agent.isPriority]
 
     def addCarToQueue(self, matesInCellPosition) -> None:
         # Save the cars in a list, together with their estimated arrival time (ETA)
         for agentIndex in range(0, len(matesInCellPosition)):
             agent = matesInCellPosition[agentIndex]
-            if type(agent) == type(self.sample):
+            if type(agent) == type(self.driversSample):
                 agentX,agentY = agent.pos 
                 if self.direction == "north": self.queue.append((agent, (agent.velocity * (self.pos[1] - agentY))))
                 elif self.direction == "east": self.queue.append((agent, (agent.velocity * (self.pos[0] - agentX))))

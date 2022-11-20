@@ -85,5 +85,5 @@ server = mesa.visualization.ModularServer(
         grid], "Smart Traffic Light", simulation_params
 )
 
-server.port = 8523
+server.port = 8524
 server.launch()
