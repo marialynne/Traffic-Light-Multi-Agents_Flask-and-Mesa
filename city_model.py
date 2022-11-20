@@ -6,25 +6,6 @@ from driver_agent import DriverAgent
 rows = 21
 columns = 21
 
-# Funciones se modifica segun heurisitca de cada quien 
-def getNumberOfCrashes(model) -> int:
-    return 1
-
-def getCurrentCongestion(model) -> int:
-    return 1
-
-def getSanity(model) -> int:
-    return 1
-
-def getTimeOfTrafficLightOn(model) -> int:
-    return 1
-
-def getsuccessRateWithoutCrash(model) -> int:
-    return 1
-
-def getMovesByDriver(model) -> int:
-    return 1
-
 # De aqui solo se modifca el 'driverType'
 # 1 -> GoodDriver
 # 2 -> Ambulance
@@ -42,20 +23,14 @@ class CityModel(mesa.Model):
         self.steps = 0
         driverSample = DriverAgent(self.next_id(), self, 0)
         self.driverType = 1 # Solo se modifica segun el driver de cada quien
-        self.crashes = getNumberOfCrashes(self)
-        self.congestion = getCurrentCongestion(self)
-        self.sanity = getSanity(self)
-        self.TimeOfTrafficLightOn = getTimeOfTrafficLightOn(self)
-        self.successRateWithoutCrash = getsuccessRateWithoutCrash(self)
-        self.MovesByDriver = getMovesByDriver(self)
         self.datacollector = mesa.DataCollector(
             model_reporters= {
-            'Crashes': lambda m: m.crashes,
-            'Congestion': lambda m: m.congestion,
-            'Sanity': lambda m: m.sanity,
-            'TimeOfTrafficLightOn': lambda m: m.TimeOfTrafficLightOn,
-            'SuccessRateWithoutCrash': lambda m: m.successRateWithoutCrash,
-            'MovesByDriver': lambda m: m.MovesByDriver}
+            'Crashes': CityModel.getNumberOfCrashes,
+            'Congestion': CityModel.getCurrentCongestion,
+            'Sanity': CityModel.getSanity,
+            'TimeOfTrafficLightOn': CityModel.getTimeOfTrafficLightOn,
+            'SuccessRateWithoutCrash': CityModel.getsuccessRateWithoutCrash,
+            'MovesByDriver': CityModel.getMovesByDriver}
         ) 
         # Add agents
         for row in range (rows):
@@ -120,3 +95,28 @@ class CityModel(mesa.Model):
         self.schedule.step()
         if self.steps < self.agents: self.createDriver()
         self.steps += 1
+        
+    # Funciones se modifica segun heurisitca de cada quien 
+    @staticmethod
+    def getNumberOfCrashes(model) -> int:
+        return 1
+
+    @staticmethod
+    def getCurrentCongestion(model) -> int:
+        return 1
+
+    @staticmethod
+    def getSanity(model) -> int:
+        return 1
+
+    @staticmethod
+    def getTimeOfTrafficLightOn(model) -> int:
+        return 1
+
+    @staticmethod
+    def getsuccessRateWithoutCrash(model) -> int:
+        return 1
+
+    @staticmethod
+    def getMovesByDriver(model) -> int:
+        return 1

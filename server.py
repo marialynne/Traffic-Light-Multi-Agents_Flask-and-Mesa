@@ -3,24 +3,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from mesa.visualization.UserParam import UserSettableParameter
-from mesa.visualization.modules import ChartModule
-
+from mesa.visualization.modules import ChartModule, CanvasGrid
 
 PIXELS_GRID = 600
-
-params = {
-    "agents": 5,
-    "time": 25
-}
-results = mesa.batch_run(
-    CityModel,
-    parameters=params,
-    iterations=100,
-    max_steps=500,  # time
-    number_processes=1,
-    data_collection_period=1,
-    display_progress=True,
-)  
 
 def agent_portrayal(agent): # A color is assigned to each type of agent
     portrayal = {"Shape": "circle", "Filled": "true"}
@@ -71,6 +56,20 @@ simulation_params = {
     )
 }
 
+""" params = {
+    "agents": 5,
+    "time": 25
+}
+results = mesa.batch_run(
+    CityModel,
+    parameters=params,
+    iterations=10,
+    max_steps=500,  # time
+    number_processes=1,
+    data_collection_period=1,
+    display_progress=True,
+)   """
+
 chartCrashes = ChartModule([{"Label": "Crashes", "Color": "Red"}], data_collector_name='datacollector')
 chartCongestion = ChartModule([{"Label": "Congestion", "Color": "Red"}], data_collector_name='datacollector')
 chartSanity = ChartModule([{"Label": "Sanity", "Color": "Red"}], data_collector_name='datacollector')
@@ -78,8 +77,7 @@ chartTimeOfTrafficLightOn = ChartModule([{"Label": "TimeOfTrafficLightOn", "Colo
 chartSuccessRateWithoutCrash = ChartModule([{"Label": "SuccessRateWithoutCrash", "Color": "Blue"}], data_collector_name='datacollector')
 chartMovesByDriver = ChartModule([{"Label": "MovesByDriver", "Color": "Blue"}], data_collector_name='datacollector')
 
-grid = mesa.visualization.CanvasGrid(
-    agent_portrayal, 21, 21, PIXELS_GRID, PIXELS_GRID)
+grid = CanvasGrid(agent_portrayal, 21, 21, PIXELS_GRID, PIXELS_GRID)
 
 server = mesa.visualization.ModularServer(
     CityModel, [grid,
