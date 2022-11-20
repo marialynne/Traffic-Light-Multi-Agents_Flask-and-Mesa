@@ -9,3 +9,5 @@ pyvenv.cfg
 /share
 /bin
 bin
+.python-version
+.python_version
