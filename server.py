@@ -8,21 +8,6 @@ from mesa.visualization.modules import ChartModule, CanvasGrid
 
 PIXELS_GRID = 600
 
-
-""" params = {
-    "agents": 5,
-    "time": 25
-}
-results = mesa.batch_run(
-    CityModel,
-    parameters=params,
-    iterations=10,
-    max_steps=50,  # time
-    number_processes=1,
-    data_collection_period=1,
-    display_progress=True,
-) """
-
 def agent_portrayal(agent): # A color is assigned to each type of agent
     portrayal = {"Shape": "circle", "Filled": "true"}
     if agent.layerLevel == 2: # Traffic Lights
@@ -46,6 +31,12 @@ def agent_portrayal(agent): # A color is assigned to each type of agent
         portrayal["Color"] = "blue"
         portrayal["Layer"] = 1
         portrayal["r"] = 0.8
+    elif agent.layerLevel == 4:
+        portrayal["Shape"] = "rect"
+        portrayal["Color"] = "gray"
+        portrayal["Layer"] = 0
+        portrayal["h"] = 1
+        portrayal["w"] = 1
     else: # Road
         portrayal["Shape"] = "rect"
         portrayal["Color"] = "black"
@@ -54,6 +45,42 @@ def agent_portrayal(agent): # A color is assigned to each type of agent
         portrayal["w"] = 1
     return portrayal
 
+params = {
+    "agents": 15,
+    "time": 25
+}
+results = mesa.batch_run(
+    CityModel,
+    parameters=params,
+    iterations=20,
+    max_steps=1000,  # time
+    number_processes=1,
+    data_collection_period=1,
+    display_progress=True,
+)
+
+results_df = pd.DataFrame(results)
+
+congestion = pd.DataFrame(results_df, columns=['Congestion'])
+crashes = pd.DataFrame(results_df, columns=['Crashes'])
+sanity = pd.DataFrame(results_df, columns=['Sanity'])
+movesByDriver = pd.DataFrame(results_df, columns=['MovesByDriver'])
+
+""" congestion_filtered = congestion[(results_df.Step == 10)]
+crashes_filtered = crashes[(results_df.Step == 10)]
+sanity_filtered = sanity[(results_df.Step == 10)]
+movesByDriver_filtered = movesByDriver[(results_df.Step == 10)] """
+
+congestion.plot()
+crashes.plot()
+sanity.plot()
+movesByDriver.plot()
+# save the model data (stored in the pandas gini object) to CSV
+results_df.to_csv("model_data.csv")
+plt.show()
+  
+  
+  
 simulation_params = {
     "agents": UserSettableParameter(
         "slider",
@@ -71,13 +98,13 @@ simulation_params = {
         description="Time to end",
     )
 }
-  
+
 
 chartCrashes = ChartModule([{"Label": "Crashes", "Color": "Red"}], data_collector_name='datacollector')
 chartCongestion = ChartModule([{"Label": "Congestion", "Color": "Red"}], data_collector_name='datacollector')
 chartSanity = ChartModule([{"Label": "Sanity", "Color": "Red"}], data_collector_name='datacollector')
-chartTimeOfTrafficLightOn = ChartModule([{"Label": "TimeOfTrafficLightOn", "Color": "Blue"}], data_collector_name='datacollector')
-chartSuccessRateWithoutCrash = ChartModule([{"Label": "SuccessRateWithoutCrash", "Color": "Blue"}], data_collector_name='datacollector')
+#chartTimeOfTrafficLightOn = ChartModule([{"Label": "TimeOfTrafficLightOn", "Color": "Blue"}], data_collector_name='datacollector')
+#chartSuccessRateWithoutCrash = ChartModule([{"Label": "SuccessRateWithoutCrash", "Color": "Blue"}], data_collector_name='datacollector')
 chartMovesByDriver = ChartModule([{"Label": "MovesByDriver", "Color": "Blue"}], data_collector_name='datacollector')
 
 grid = CanvasGrid(agent_portrayal, 21, 21, PIXELS_GRID, PIXELS_GRID)
@@ -87,8 +114,8 @@ server = mesa.visualization.ModularServer(
                 chartCrashes,
                 chartSanity,
                 chartCongestion,
-                chartTimeOfTrafficLightOn,
-                chartSuccessRateWithoutCrash,
+                #chartTimeOfTrafficLightOn,
+                #chartSuccessRateWithoutCrash,
                 chartMovesByDriver], 
     "Smart Traffic Light", simulation_params
 )

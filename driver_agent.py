@@ -75,8 +75,11 @@ class DriverAgent(mesa.Agent):
                             return self.getNextPosition(agent)
                     return (self.pos)
 
-                elif (type(newAgent) == DriverAgent) and  (type(newAgent) != IntersectionTrafficLightsAgent) and (self.driverType != 3 or self.driverType != 4):  
-                    return (self.pos) 
+                elif (type(newAgent) == IntersectionTrafficLightsAgent) and (self.driverType != 3 or self.driverType != 4):  
+                    return self.getNextPosition(agent)
+                    
+                # (type(newAgent) == DriverAgent) and    return (self.pos) 
+                   
                 
             if type(agent) == RoadAgent:
                 return self.getNextPosition(agent)

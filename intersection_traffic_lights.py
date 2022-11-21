@@ -2,7 +2,7 @@ import mesa
 import random
 
 class IntersectionTrafficLightsAgent(mesa.Agent):
-    def __init__(self, unique_id, model, smt1, smt2, driverSample, layerLevel = 0):
+    def __init__(self, unique_id, model, smt1, smt2, driverSample, layerLevel = 4):
         super().__init__(unique_id, model)
         self.smt1 = smt1
         self.smt2 = smt2
