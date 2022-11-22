@@ -1,8 +1,8 @@
 import mesa
-from road_agent import RoadAgent
-from smart_traffic_light_agent import SmartTrafficLightAgent
-from intersection_traffic_lights import IntersectionTrafficLightsAgent
-from driver_agent import DriverAgent
+from agents.road_agent import RoadAgent
+from agents.smart_traffic_light_agent import SmartTrafficLightAgent
+from agents.intersection_traffic_lights_agent import IntersectionTrafficLightsAgent
+from agents.driver_agent import DriverAgent
 rows = 21
 columns = 21
 

@@ -1,9 +1,8 @@
 import mesa
 import random
-from road_agent import RoadAgent
-from intersection_traffic_lights import IntersectionTrafficLightsAgent
-from smart_traffic_light_agent import SmartTrafficLightAgent
-from mesa.datacollection import DataCollector
+from agents.road_agent import RoadAgent
+from agents.intersection_traffic_lights_agent import IntersectionTrafficLightsAgent
+from agents.smart_traffic_light_agent import SmartTrafficLightAgent
 
 class DriverAgent(mesa.Agent):
     def __init__(self, unique_id, model, driverType, layerLevel = 1):
