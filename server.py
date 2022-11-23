@@ -52,14 +52,16 @@ params = {
 results = mesa.batch_run(
     CityModel,
     parameters=params,
-    iterations=20,
-    max_steps=1000,  # time
+    iterations=1,
+    max_steps=500,  # time
     number_processes=1,
     data_collection_period=1,
     display_progress=True,
 )
 
 results_df = pd.DataFrame(results)
+
+print(results_df)
 
 congestion = pd.DataFrame(results_df, columns=['Congestion'])
 crashes = pd.DataFrame(results_df, columns=['Crashes'])
@@ -79,8 +81,6 @@ movesByDriver.plot()
 results_df.to_csv("model_data.csv")
 plt.show()
   
-  
-  
 simulation_params = {
     "agents": UserSettableParameter(
         "slider",
@@ -99,7 +99,6 @@ simulation_params = {
     )
 }
 
-
 chartCrashes = ChartModule([{"Label": "Crashes", "Color": "Red"}], data_collector_name='datacollector')
 chartCongestion = ChartModule([{"Label": "Congestion", "Color": "Red"}], data_collector_name='datacollector')
 chartSanity = ChartModule([{"Label": "Sanity", "Color": "Red"}], data_collector_name='datacollector')
@@ -109,7 +108,7 @@ chartMovesByDriver = ChartModule([{"Label": "MovesByDriver", "Color": "Blue"}], 
 
 grid = CanvasGrid(agent_portrayal, 21, 21, PIXELS_GRID, PIXELS_GRID)
 
-server = mesa.visualization.ModularServer(
+""" server = mesa.visualization.ModularServer(
     CityModel, [grid,
                 chartCrashes,
                 chartSanity,
@@ -121,4 +120,4 @@ server = mesa.visualization.ModularServer(
 )
 
 server.port = 8525
-server.launch()
+server.launch() """

@@ -32,7 +32,9 @@ class CityModel(mesa.Model):
             'Sanity': CityModel.getSanity,
             'TimeOfTrafficLightOn': CityModel.getTimeOfTrafficLightOn,
             'SuccessRateWithoutCrash': CityModel.getsuccessRateWithoutCrash,
-            'MovesByDriver': CityModel.getMovesByDriver}
+            'MovesByDriver': CityModel.getMovesByDriver,
+            'DriversPositions': CityModel.getAgentPositionAtStep
+            }
         ) 
         # Add agents
         for row in range (rows):
@@ -98,6 +100,16 @@ class CityModel(mesa.Model):
         if self.steps < self.agents: self.createDriver()
         self.steps += 1
         self.datacollector.collect(self)
+        drivers = [agent for agent in self.schedule.agents if type(agent) == DriverAgent]
+        objToJson =	{
+            "code": 200,
+            "msg": "Succes",
+            }
+        data = {}
+        for index, driver in enumerate(drivers):
+            data.update({ str(index): driver.pos })
+        objToJson.update({ "data": data })
+        return objToJson
         
     # Funciones se modifica segun heurisitca de cada quien 
     @staticmethod
@@ -139,3 +151,12 @@ class CityModel(mesa.Model):
         for driver in drivers:
             model.moves += driver.getMoves()
         return model.moves
+    
+    @staticmethod
+    def getAgentPositionAtStep(model) -> dict:
+        drivers = [agent for agent in model.schedule.agents if type(agent) == DriverAgent]
+        objToJson = {}
+        for index, driver in enumerate(drivers):
+            objToJson[index]: driver.pos
+        return objToJson
+   
