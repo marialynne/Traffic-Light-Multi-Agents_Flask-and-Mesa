@@ -1,14 +1,18 @@
-from flask import Flask,request
+from flask import Flask, request
 from city_model import CityModel
-import json,os
+import json
+import os
 
 app = Flask(__name__, static_url_path='')
 port = int(os.getenv('PORT', 8000))
 
+
 class DataStore():
     simulation = CityModel(5, 100)
 
+
 data = DataStore()
+
 
 @app.route("/")
 def run_simulation():
@@ -20,6 +24,7 @@ def run_simulation():
     else:
         data.simulation = CityModel(int(agents), int(time))
         return "Created simulation"
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port, debug=True)
