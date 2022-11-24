@@ -43,12 +43,10 @@ class IntersectionTrafficLightsAgent(mesa.Agent):
     def checkCrash(self) -> None:
         agents = self.model.grid.get_cell_list_contents([self.pos])
         drivers = [agent for agent in agents if type(agent) == self.driverSample]
-        if self.driverSample in drivers: self.model.grid.remove_agent(drivers[0])
-        
+        #if self.driverSample in drivers: self.model.grid.remove_agent(drivers[0])
         if len(drivers) > 1:
             for driver in drivers:
-                print("Crash")
-                #self.model.grid.remove_agent(drivers[0])
+                self.model.grid.remove_agent(driver)
                 
     def step(self) -> None:
         self.calculatePriority()

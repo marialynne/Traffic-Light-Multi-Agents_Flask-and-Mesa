@@ -47,14 +47,15 @@ class DriverAgent(mesa.Agent):
         elif direction == "east": return(x+1,y) 
         
     def move(self) -> None:
-        if (self.velocityIndex < self.velocity):
-            self.velocityIndex += 1
-        if(self.velocityIndex == self.velocity):
-            self.moves += 1
-            cellmates = self.model.grid.get_cell_list_contents([self.pos]) # Gets all the agents on road
-            newPosition = self.checkMovement(cellmates)
-            self.model.grid.move_agent(self,newPosition)
-            self.velocityIndex = 0
+        if self.pos:
+            if (self.velocityIndex < self.velocity):
+                self.velocityIndex += 1
+            if(self.velocityIndex == self.velocity):
+                self.moves += 1
+                cellmates = self.model.grid.get_cell_list_contents([self.pos]) # Gets all the agents on road
+                newPosition = self.checkMovement(cellmates)
+                self.model.grid.move_agent(self,newPosition)
+                self.velocityIndex = 0
             
     def checkMovement(self, cellmates) -> tuple:
         for agent in cellmates:
