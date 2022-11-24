@@ -1,7 +1,6 @@
-from flask import Flask, session, request
+from flask import Flask,request
 from city_model import CityModel
-import mesa
-import json, logging, os, atexit
+import json,os
 
 app = Flask(__name__, static_url_path='')
 port = int(os.getenv('PORT', 8000))

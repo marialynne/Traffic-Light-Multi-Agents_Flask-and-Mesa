@@ -1,6 +1,5 @@
 import mesa
 import random
-
 class IntersectionTrafficLightsAgent(mesa.Agent):
     def __init__(self, unique_id, model, smt1, smt2, driverSample, layerLevel = 4):
         super().__init__(unique_id, model)
@@ -18,7 +17,7 @@ class IntersectionTrafficLightsAgent(mesa.Agent):
         
     def calculatePriority(self) -> None:
         agentsInCell = self.model.grid.get_cell_list_contents([self.pos])
-        if not type(self.driverSample) in agentsInCell:
+        if not self.driverSample in agentsInCell:
             
             if (self.smt1.hasAnAmbulance):
                 self.changeTrafficLight("green","red")
@@ -40,6 +39,17 @@ class IntersectionTrafficLightsAgent(mesa.Agent):
                     randomLight = random.choice([True, False])
                     if randomLight: self.changeTrafficLight("green","red")
                     else: self.changeTrafficLight("red","green")
+                    
+    def checkCrash(self) -> None:
+        agents = self.model.grid.get_cell_list_contents([self.pos])
+        drivers = [agent for agent in agents if type(agent) == self.driverSample]
+        if self.driverSample in drivers: self.model.grid.remove_agent(drivers[0])
         
+        if len(drivers) > 1:
+            for driver in drivers:
+                print("Crash")
+                #self.model.grid.remove_agent(drivers[0])
+                
     def step(self) -> None:
         self.calculatePriority()
+        self.checkCrash()

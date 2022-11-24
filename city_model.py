@@ -1,4 +1,5 @@
 import mesa
+import random
 from agents.road_agent import RoadAgent
 from agents.smart_traffic_light_agent import SmartTrafficLightAgent
 from agents.intersection_traffic_lights_agent import IntersectionTrafficLightsAgent
@@ -23,8 +24,7 @@ class CityModel(mesa.Model):
         self.steps = 0
         self.crashes = 0
         self.moves = 0
-        driverSample = DriverAgent(self.next_id(), self, 0)
-        self.driverType = 4 # Solo se modifica segun el driver de cada quien
+        driverSample = DriverAgent
         self.datacollector = mesa.DataCollector(
             model_reporters= {
             'Crashes': CityModel.getNumberOfCrashes,
@@ -89,7 +89,7 @@ class CityModel(mesa.Model):
         corners = [(0, 0), (20, 0), (0, 20), (20, 20)]
         index = self.steps % 4
         row, col = corners[index]
-        self.addAgent(DriverAgent(self.next_id(), self, self.driverType), row, col)
+        self.addAgent(DriverAgent(self.next_id(), self, random.randrange(1, 4)), row, col)
                   
     def run_model(self) -> None:
         while self.running:

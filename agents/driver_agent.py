@@ -11,11 +11,11 @@ class DriverAgent(mesa.Agent):
         self.velocityIndex = 0
         self.driverType = driverType
         # Los siguientes se modifican segun el driver
-        # 5 steps -> 1 move
-        # 1 step -> 1 move 
+        # 5 steps -> 1 move = velocity 5
+        # 1 step -> 1 move = velocity 1
         self.velocity = 2
         self.isPriority = False # Ambulance
-        self.sanity = 0
+        self.sanity = 10
         self.moves = 0
         
     def getMoves(self):
@@ -25,7 +25,7 @@ class DriverAgent(mesa.Agent):
         return self.sanity
     
     def crazyDriver(self):
-        self.sanity = 10
+        self.sanity = 0
         self.velocity = 1
     
     def wannabeCrazyDriver(self):
@@ -45,7 +45,7 @@ class DriverAgent(mesa.Agent):
         elif direction == "south": return(x,y-1)
         elif direction == "west": return(x-1,y)
         elif direction == "east": return(x+1,y) 
-    
+        
     def move(self) -> None:
         if (self.velocityIndex < self.velocity):
             self.velocityIndex += 1
@@ -60,33 +60,34 @@ class DriverAgent(mesa.Agent):
         for agent in cellmates:
             newMoveMates = self.model.grid.get_cell_list_contents([self.getNextPosition(agent)])
             for newAgent in newMoveMates:
+                if (type(newAgent) == DriverAgent and type(newAgent) != IntersectionTrafficLightsAgent):   
+                    return (self.pos) 
+                elif (type(newAgent) == IntersectionTrafficLightsAgent):  
+                    return self.getNextPosition(agent)  # crashes
+                
                 if(type(newAgent) == SmartTrafficLightAgent and newAgent.color == "red"):
-                    # wannabe crazy driver
-                    if(self.driverType == 4 and self.sanity <= 10): 
-                        self.sanity += 1 # CrazyDiver has to wait
+                    # wannabe crazy driver = 4
+                    if(self.driverType == 4 and self.sanity >= 0): 
+                        self.sanity -= 1 # CrazyDiver has to wait
                         if(self.velocity >= 1): self.velocity -= 1  
-                    # cray driver 
+                    # cray driver = 3 
                     if(self.driverType == 3 or self.driverType == 4):
                         probabilityOfCrash = random.randint(1,10)
                         # crazyDriver 90%
                         # wannabeCrazy 0% -> 90%
-                        if(self.sanity > probabilityOfCrash):
-                            return self.getNextPosition(agent)
+                        if(self.sanity < probabilityOfCrash):
+                            return self.getNextPosition(agent) # crashes
                     return (self.pos)
-
-                elif (type(newAgent) == IntersectionTrafficLightsAgent) and (self.driverType != 3 or self.driverType != 4):  
+                elif(type(newAgent) == SmartTrafficLightAgent and newAgent.color == "green"):
                     return self.getNextPosition(agent)
-                    
-                # (type(newAgent) == DriverAgent) and    return (self.pos) 
-                   
                 
+                
+                   
             if type(agent) == RoadAgent:
                 return self.getNextPosition(agent)
                           
     def step(self) -> None:
-        
         if(self.driverType == 2): self.ambulance()
         if(self.driverType == 3): self.crazyDriver()
-        elif(self.driverType == 4 and self.sanity == 0): self.wannabeCrazyDriver()
-        
+        elif(self.driverType == 4 and self.sanity == 10): self.wannabeCrazyDriver()
         self.move() 
