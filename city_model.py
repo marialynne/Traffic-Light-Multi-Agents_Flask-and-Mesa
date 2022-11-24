@@ -100,15 +100,34 @@ class CityModel(mesa.Model):
         if self.steps < self.agents: self.createDriver()
         self.steps += 1
         self.datacollector.collect(self)
+
         drivers = [agent for agent in self.schedule.agents if type(agent) == DriverAgent]
+        intersections = [agent for agent in self.schedule.agents if type(agent) == IntersectionTrafficLightsAgent]
+        
         objToJson =	{
             "code": 200,
-            "msg": "Succes",
+            "msg": "Get Succes!",
             }
         data = {}
+        data.update({ "step": self.steps })
+
+        intersectionsObj = {}
+        smtsObj = {}
+        for index, intersection in enumerate(intersections):
+            smtsObj.update({"position":intersection.pos})
+            smtsObj.update({"smt1":intersection.smt1.color})
+            smtsObj.update({"smt2":intersection.smt2.color})
+            intersectionsObj.update({ str(index): smtsObj})
+
+        data.update({"intersections": intersectionsObj})
+
+        driversObj = {}
         for index, driver in enumerate(drivers):
-            data.update({ str(index): driver.pos })
-        objToJson.update({ "data": data })
+            driversObj.update({ str(index): driver.pos })
+        data.update({ "drivers": driversObj })
+
+        objToJson.update({"data": data})
+
         return objToJson
         
     # Funciones se modifica segun heurisitca de cada quien 
