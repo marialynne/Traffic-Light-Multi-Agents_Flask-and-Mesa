@@ -139,16 +139,20 @@ class CityModel(mesa.Model):
             smtsObj.update({"smt1": intersection.smt1.color})
             smtsObj.update({"smt2": intersection.smt2.color})
             intersectionsObj.update({str(index): smtsObj})
+            smtsObj = {}
 
         data.update({"intersections": intersectionsObj})
 
+        driversListObj = {}
         driversObj = {}
         for index, driver in enumerate(drivers):
             driversObj.update({"id": str(index)})
             driversObj.update({"position": driver.pos})
             driversObj.update({"driverType": driver.driverType})
             driversObj.update({"isPriority": driver.isPriority})
-        data.update({"drivers": driversObj})
+            driversListObj.update({ str(index): driversObj })
+            driversObj = {}
+        data.update({"drivers": driversListObj})
 
         objToJson.update({"data": data})
 
