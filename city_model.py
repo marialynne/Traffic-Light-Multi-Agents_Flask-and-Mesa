@@ -144,7 +144,10 @@ class CityModel(mesa.Model):
 
         driversObj = {}
         for index, driver in enumerate(drivers):
-            driversObj.update({str(index): driver.pos})
+            driversObj.update({"id": str(index)})
+            driversObj.update({"position": driver.pos})
+            driversObj.update({"driverType": driver.driverType})
+            driversObj.update({"isPriority": driver.isPriority})
         data.update({"drivers": driversObj})
 
         objToJson.update({"data": data})
