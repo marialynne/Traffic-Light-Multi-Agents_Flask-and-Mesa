@@ -136,8 +136,8 @@ class CityModel(mesa.Model):
         smtsObj = {}
         for index, intersection in enumerate(intersections):
             smtsObj.update({"position": intersection.pos})
-            smtsObj.update({"smt1": intersection.smt1.color})
-            smtsObj.update({"smt2": intersection.smt2.color})
+            smtsObj.update({"smt1": { "color": intersection.smt1.color, "position": [intersection.smt1.pos[0], 0, intersection.smt1.pos[1]] }})
+            smtsObj.update({"smt2": { "color": intersection.smt2.color, "position": [intersection.smt2.pos[0], 0, intersection.smt2.pos[1]] }})
             intersectionsObj.update({ "intersection_" + str(index): { "intersection": smtsObj }})
             smtsObj = {}
 
@@ -146,14 +146,13 @@ class CityModel(mesa.Model):
         driversListObj = {}
         driversObj = {}
         for index, driver in enumerate(drivers):
-            driversObj.update({"id": str(index)})
-            driversObj.update({"position": driver.pos})
-            driversObj.update({"driverType": driver.driverType})
-            driversObj.update({"isPriority": driver.isPriority})
+            driversObj.update({ "id": str(index) })
+            driversObj.update({ "position": [driver.pos[0], 0, driver.pos[1]] })
+            driversObj.update({ "driverType": driver.driverType })
+            driversObj.update({ "isPriority": driver.isPriority })
             driversListObj.update({ "driver_" + str(index): { "driver": driversObj} })
             driversObj = {}
         data.update({"drivers": driversListObj})
-
 
         objToJson.update({"data": data})
 
