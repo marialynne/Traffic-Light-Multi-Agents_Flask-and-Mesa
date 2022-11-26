@@ -16,13 +16,12 @@ columns = 21
 
 
 class CityModel(mesa.Model):
-    def __init__(self, agents, time):
+    def __init__(self, agents):
         self.schedule = mesa.time.RandomActivationByType(self)
         self.grid = mesa.space.MultiGrid(rows, columns, False)
         self.agents = agents
         self.current_id = 0
         self.running = True
-        self.time = time
         self.steps = 0
         self.crashes = 0
         self.moves = 0
@@ -147,7 +146,10 @@ class CityModel(mesa.Model):
         driversObj = {}
         for index, driver in enumerate(drivers):
             driversObj.update({ "id": str(index) })
-            driversObj.update({ "position": [driver.pos[0], 0, driver.pos[1]] })
+            if driver.pos:
+                driversObj.update({ "position": [driver.pos[0], 0, driver.pos[1]] })
+            else:
+                driversObj.update({ "position": driver.pos })
             driversObj.update({ "driverType": driver.driverType })
             driversObj.update({ "isPriority": driver.isPriority })
             driversListObj.update({ "driver_" + str(index): { "driver": driversObj} })

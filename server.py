@@ -1,6 +1,6 @@
 from city_model import CityModel
 import mesa
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from mesa.visualization.UserParam import UserSettableParameter
@@ -49,12 +49,11 @@ def agent_portrayal(agent):  # A color is assigned to each type of agent
 
 params = {
     "agents": 15,
-    "time": 25
 }
 results = mesa.batch_run(
     CityModel,
     parameters=params,
-    iterations=1,
+    iterations=50,
     max_steps=500,  # time
     number_processes=1,
     data_collection_period=1,
@@ -62,8 +61,6 @@ results = mesa.batch_run(
 )
 
 results_df = pd.DataFrame(results)
-
-print(results_df)
 
 congestion = pd.DataFrame(results_df, columns=['Congestion'])
 crashes = pd.DataFrame(results_df, columns=['Crashes'])
@@ -92,12 +89,6 @@ simulation_params = {
         max_value=30,
         step=1,
         description="Number of Agents",
-    ),
-    "time": UserSettableParameter(
-        "number",
-        "Time",
-        25,
-        description="Time to end",
     )
 }
 
@@ -126,4 +117,4 @@ server = mesa.visualization.ModularServer(
 )
 
 server.port = 8525
-server.launch()
+# server.launch()
