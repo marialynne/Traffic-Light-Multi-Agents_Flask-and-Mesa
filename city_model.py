@@ -135,9 +135,12 @@ class CityModel(mesa.Model):
         smtsObj = {}
         for index, intersection in enumerate(intersections):
             smtsObj.update({"position": intersection.pos})
-            smtsObj.update({"smt1": { "color": intersection.smt1.color, "position": { "x": intersection.smt1.pos[0], "z": 0, "y": intersection.smt1.pos[0] } }})
-            smtsObj.update({"smt2": { "color": intersection.smt2.color, "position": { "x": intersection.smt2.pos[0], "z": 0, "y": intersection.smt2.pos[0] } }})
-            intersectionsObj.update({ "intersection_" + str(index): { "intersection": smtsObj }})
+            smtsObj.update({"smt1": {"color": intersection.smt1.color, "position": {
+                           "x": intersection.smt1.pos[0], "z": 0, "y": intersection.smt1.pos[0]}}})
+            smtsObj.update({"smt2": {"color": intersection.smt2.color, "position": {
+                           "x": intersection.smt2.pos[0], "z": 0, "y": intersection.smt2.pos[0]}}})
+            intersectionsObj.update(
+                {"intersection_" + str(index): {"intersection": smtsObj}})
             smtsObj = {}
 
         data.update({"intersections": intersectionsObj})
@@ -145,14 +148,17 @@ class CityModel(mesa.Model):
         driversListObj = {}
         driversObj = {}
         for index, driver in enumerate(drivers):
-            driversObj.update({ "id": str(index) })
+            driversObj.update({"id": str(index)})
             if driver.pos:
-                driversObj.update({ "position": { "x": driver.pos[0], "z": 0, "y": driver.pos[1] } })
+                driversObj.update({"x": driver.pos[0]})
+                driversObj.update({"y": 0})
+                driversObj.update({"z": driver.pos[1]})
             else:
-                driversObj.update({ "position": driver.pos })
-            driversObj.update({ "driverType": driver.driverType })
-            driversObj.update({ "isPriority": driver.isPriority })
-            driversListObj.update({ "driver_" + str(index): { "driver": driversObj} })
+                driversObj.update({"position": driver.pos})
+            driversObj.update({"driverType": driver.driverType})
+            driversObj.update({"isPriority": driver.isPriority})
+            driversListObj.update(
+                {"driver_" + str(index): {"driver": driversObj}})
             driversObj = {}
         data.update({"drivers": driversListObj})
 
