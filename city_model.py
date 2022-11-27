@@ -25,6 +25,8 @@ class CityModel(mesa.Model):
         self.steps = 0
         self.crashes = 0
         self.moves = 0
+        self.currentCongestion = 0
+        self.currentSanity = 0
         driverSample = DriverAgent
         self.datacollector = mesa.DataCollector(
             model_reporters={
@@ -168,6 +170,12 @@ class CityModel(mesa.Model):
             driversObj = {}
         data.update({"drivers": driversListObj})
 
+        collectos = {}
+        collectos.update({ "crashes": self.crashes })
+        collectos.update({ "sanity": self.currentSanity })
+        collectos.update({ "congestion": self.currentCongestion })
+        data.update({ "datacollector": collectos })
+
         objToJson.update({"data": data})
 
         return objToJson
@@ -187,21 +195,21 @@ class CityModel(mesa.Model):
 
     @staticmethod
     def getCurrentCongestion(model) -> int:  # to do
-        currentCongestion = 0
+        model.currentCongestion = 0
         intersections = [agent for agent in model.schedule.agents if type(
             agent) == IntersectionTrafficLightsAgent]
         for intersection in intersections:
-            currentCongestion += intersection.getCongestion()
-        return currentCongestion
+            model.currentCongestion += intersection.getCongestion()
+        return model.currentCongestion
 
     @staticmethod
     def getSanity(model) -> int:
-        currentSanity = 0
+        model.currentSanity = 0
         drivers = [agent for agent in model.schedule.agents if type(
             agent) == DriverAgent]
         for driver in drivers:
-            currentSanity += driver.getSanity()
-        return currentSanity
+            model.currentSanity += driver.getSanity()
+        return model.currentSanity
 
     @staticmethod
     def getTimeOfTrafficLightOn(model) -> int:

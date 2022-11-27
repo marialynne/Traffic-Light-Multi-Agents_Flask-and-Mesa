@@ -8,7 +8,7 @@ port = int(os.getenv('PORT', 8000))
 
 
 class DataStore():
-    simulation = CityModel(5)
+    simulation = CityModel(20)
 
 data = DataStore()
 
