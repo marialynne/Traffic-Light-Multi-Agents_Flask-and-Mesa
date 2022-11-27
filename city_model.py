@@ -89,11 +89,11 @@ class CityModel(mesa.Model):
                     self.addAgent(smt6, row, col)
         # Add intersections
         self.addAgent(IntersectionTrafficLightsAgent(
-            self.next_id(), self, smt1, smt2, driverSample), 10, 10)
+            self.next_id(), self, smt1, smt2, driverSample, "center"), 10, 10)
         self.addAgent(IntersectionTrafficLightsAgent(
-            self.next_id(), self, smt3, smt4, driverSample), 10, 20)
+            self.next_id(), self, smt3, smt4, driverSample,  "up"), 10, 20)
         self.addAgent(IntersectionTrafficLightsAgent(
-            self.next_id(), self, smt5, smt6, driverSample), 20, 10)
+            self.next_id(), self, smt5, smt6, driverSample, "right"), 20, 10)
 
     def addAgent(self, agent, row, col) -> None:
         self.schedule.add(agent)
@@ -139,11 +139,14 @@ class CityModel(mesa.Model):
             smtsObj.update({ "x": intersection.pos[0] })
             smtsObj.update({ "y": 0 })
             smtsObj.update({ "z": intersection.pos[1] })
+            smtsObj.update({ "direction": intersection.identifier })
             smtsObj.update({ "smt1Color": intersection.smt1.color })
+            smtsObj.update({ "smt1Direction": intersection.smt1.direction })
             smtsObj.update({ "smt1x": intersection.smt1.pos[0] })
             smtsObj.update({ "smt1y": 0 })
             smtsObj.update({ "smt1z": intersection.smt1.pos[1] })
             smtsObj.update({ "smt2Color": intersection.smt2.color })
+            smtsObj.update({ "smt2Direction": intersection.smt2.direction })
             smtsObj.update({ "smt2x": intersection.smt2.pos[0] })
             smtsObj.update({ "smt2y": 0 })
             smtsObj.update({ "smt2z": intersection.smt2.pos[1] })
