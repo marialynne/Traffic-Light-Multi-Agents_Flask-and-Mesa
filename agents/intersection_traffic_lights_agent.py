@@ -48,9 +48,9 @@ class IntersectionTrafficLightsAgent(mesa.Agent):
         agents = self.model.grid.get_cell_list_contents([self.pos])
         drivers = [agent for agent in agents if type(
             agent) == self.driverSample]
-        #if self.driverSample in drivers: self.model.grid.remove_agent(drivers[0])
         if len(drivers) > 1:
             for driver in drivers:
+                driver.setCrasehd()
                 self.model.grid.remove_agent(driver)
 
     def step(self) -> None:

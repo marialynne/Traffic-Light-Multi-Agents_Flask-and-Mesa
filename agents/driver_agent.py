@@ -18,6 +18,7 @@ class DriverAgent(mesa.Agent):
         self.isPriority = False  # Ambulance
         self.sanity = 10
         self.moves = 0
+        self.crasehd = False
 
     def getMoves(self):
         return self.moves
@@ -35,6 +36,9 @@ class DriverAgent(mesa.Agent):
     def ambulance(self):
         self.isPriority = True
         self.velocity = 1
+    
+    def setCrasehd(self):
+        self.crasehd = True
 
     def getNextPosition(self, agent) -> None:
         if len(agent.directions) > 1:

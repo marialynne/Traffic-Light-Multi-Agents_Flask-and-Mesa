@@ -134,14 +134,6 @@ class CityModel(mesa.Model):
         intersectionsObj = {}
         smtsObj = {}
         for index, intersection in enumerate(intersections):
-            """ smtsObj.update({"position": intersection.pos})
-            smtsObj.update({"smt1": {"color": intersection.smt1.color, "position": {
-                           "x": intersection.smt1.pos[0], "z": 0, "y": intersection.smt1.pos[0]}}})
-            smtsObj.update({"smt2": {"color": intersection.smt2.color, "position": {
-                           "x": intersection.smt2.pos[0], "z": 0, "y": intersection.smt2.pos[0]}}})
-            intersectionsObj.update(
-                {"intersection_" + str(index): {"intersection": smtsObj}})
-            smtsObj = {} """
             smtsObj.update({ "x": intersection.pos[0] })
             smtsObj.update({ "y": 0 })
             smtsObj.update({ "z": intersection.pos[1] })
@@ -154,6 +146,7 @@ class CityModel(mesa.Model):
             smtsObj.update({ "smt2y": 0 })
             smtsObj.update({ "smt2z": intersection.smt2.pos[1] })
             intersectionsObj.update({"intersection" + str(index): smtsObj})
+            smtsObj = {}
 
         data.update({"intersections": intersectionsObj})
 
@@ -169,6 +162,7 @@ class CityModel(mesa.Model):
                 driversObj.update({"position": driver.pos})
             driversObj.update({"driverType": driver.driverType})
             driversObj.update({"isPriority": driver.isPriority})
+            driversObj.update({"crashed": driver.crasehd })
             driversListObj.update(
                 {"driver_" + str(index): {"driver": driversObj}})
             driversObj = {}
