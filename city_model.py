@@ -134,14 +134,26 @@ class CityModel(mesa.Model):
         intersectionsObj = {}
         smtsObj = {}
         for index, intersection in enumerate(intersections):
-            smtsObj.update({"position": intersection.pos})
+            """ smtsObj.update({"position": intersection.pos})
             smtsObj.update({"smt1": {"color": intersection.smt1.color, "position": {
                            "x": intersection.smt1.pos[0], "z": 0, "y": intersection.smt1.pos[0]}}})
             smtsObj.update({"smt2": {"color": intersection.smt2.color, "position": {
                            "x": intersection.smt2.pos[0], "z": 0, "y": intersection.smt2.pos[0]}}})
             intersectionsObj.update(
                 {"intersection_" + str(index): {"intersection": smtsObj}})
-            smtsObj = {}
+            smtsObj = {} """
+            smtsObj.update({ "x": intersection.pos[0] })
+            smtsObj.update({ "y": 0 })
+            smtsObj.update({ "z": intersection.pos[1] })
+            smtsObj.update({ "smt1Color": intersection.smt1.color })
+            smtsObj.update({ "smt1x": intersection.smt1.pos[0] })
+            smtsObj.update({ "smt1y": 0 })
+            smtsObj.update({ "smt1z": intersection.smt1.pos[1] })
+            smtsObj.update({ "smt2Color": intersection.smt2.color })
+            smtsObj.update({ "smt2x": intersection.smt2.pos[0] })
+            smtsObj.update({ "smt2y": 0 })
+            smtsObj.update({ "smt2z": intersection.smt2.pos[1] })
+            intersectionsObj.update({"intersection" + str(index): smtsObj})
 
         data.update({"intersections": intersectionsObj})
 
