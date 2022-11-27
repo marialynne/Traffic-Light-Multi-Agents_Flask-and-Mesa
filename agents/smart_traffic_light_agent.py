@@ -31,13 +31,13 @@ class SmartTrafficLightAgent(mesa.Agent):
     def searchAmbulance(self, matesInCellPosition) -> bool:
         for agentIndex in range(0, len(matesInCellPosition)):
             agent = matesInCellPosition[agentIndex]
-            return [type(agent) == type(self.driversSample) and agent.isPriority]
+            return [type(agent) == self.driversSample and agent.isPriority]
 
     def addCarToQueue(self, matesInCellPosition) -> None:
         # Save the cars in a list, together with their estimated arrival time (ETA)
         for agentIndex in range(0, len(matesInCellPosition)):
             agent = matesInCellPosition[agentIndex]
-            if type(agent) == type(self.driversSample):
+            if type(agent) == self.driversSample:
                 agentX, agentY = agent.pos
                 if self.direction == "north":
                     self.queue.append(
