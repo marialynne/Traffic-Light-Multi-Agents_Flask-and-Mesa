@@ -31,12 +31,12 @@ class DriverAgent(mesa.Agent):
         self.velocity = 1
 
     def wannabeCrazyDriver(self):
-        self.velocity = 3
+        self.velocity = 5
 
     def ambulance(self):
         self.isPriority = True
         self.velocity = 1
-    
+
     def setCrasehd(self):
         self.crasehd = True
 

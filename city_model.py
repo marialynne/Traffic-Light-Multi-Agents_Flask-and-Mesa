@@ -178,7 +178,7 @@ class CityModel(mesa.Model):
         collectos.update({"crashes": self.crashes})
         collectos.update({"sanity": self.currentSanity})
         collectos.update({"congestion": self.currentCongestion})
-        collectos.update({"staps": self.steps})
+        collectos.update({"steps": self.steps})
         data.update({"datacollector": collectos})
 
         objToJson.update({"data": data})
