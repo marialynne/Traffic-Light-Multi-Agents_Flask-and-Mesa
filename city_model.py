@@ -14,7 +14,6 @@ columns = 21
 # 4 -> WannaBeCrazyDriver
 # 5 -> Mix of drivers or truck, it's up to you
 
-
 class CityModel(mesa.Model):
     def __init__(self, agents):
         self.schedule = mesa.time.RandomActivationByType(self)
@@ -36,7 +35,11 @@ class CityModel(mesa.Model):
                 'TimeOfTrafficLightOn': CityModel.getTimeOfTrafficLightOn,
                 'SuccessRateWithoutCrash': CityModel.getsuccessRateWithoutCrash,
                 'MovesByDriver': CityModel.getMovesByDriver,
-                'DriversPositions': CityModel.getAgentPositionAtStep
+                'DriversPositions': CityModel.getAgentPositionAtStep,
+                'goodDriver': lambda model: CityModel.getDriverTypes(model, 1),
+                'ambulance': lambda model: CityModel.getDriverTypes(model, 2),
+                'crazyDriver': lambda model: CityModel.getDriverTypes(model, 3),
+                'wannabeCrazyDriver': lambda model: CityModel.getDriverTypes(model, 4),
             }
         )
         # Add agents
@@ -191,8 +194,7 @@ class CityModel(mesa.Model):
         intersections = [agent for agent in model.schedule.agents if type(
             agent) == IntersectionTrafficLightsAgent]
         for intersection in intersections:
-            agentsInCell = model.grid.get_cell_list_contents(
-                [intersection.pos])
+            agentsInCell = model.grid.get_cell_list_contents([intersection.pos])
             for agent in agentsInCell:
                 if type(agent) == DriverAgent and len(agentsInCell) >= 4:
                     model.crashes += 1
@@ -209,12 +211,12 @@ class CityModel(mesa.Model):
 
     @staticmethod
     def getSanity(model) -> int:
-        model.currentSanity = 0
+        sumSanity = 0
         drivers = [agent for agent in model.schedule.agents if type(
             agent) == DriverAgent]
         for driver in drivers:
-            model.currentSanity += driver.getSanity()
-        return model.currentSanity
+            sumSanity += driver.getSanity()
+        return sumSanity / len(drivers)
 
     @staticmethod
     def getTimeOfTrafficLightOn(model) -> int:
@@ -240,3 +242,13 @@ class CityModel(mesa.Model):
         for index, driver in enumerate(drivers):
             objToJson[index]: driver.pos
         return objToJson
+    
+    @staticmethod
+    def getDriverTypes(model, driverType) -> dict:
+        drivers = [agent for agent in model.schedule.agents if type(
+            agent) == DriverAgent]
+        """ goodDriver = len([driver for driver in drivers if driver.driverType == 1])
+        ambulance = len([driver for driver in drivers if driver.driverType == 2])
+        crazyDrivers = len([driver for driver in drivers if driver.driverType == 3])
+        wannbeCrazyDrivers = len([driver for driver in drivers if driver.driverType == 4]) """
+        return len([driver for driver in drivers if driver.driverType == driverType])

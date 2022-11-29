@@ -1,6 +1,6 @@
 from city_model import CityModel
 import mesa
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from mesa.visualization.UserParam import UserSettableParameter
@@ -56,31 +56,35 @@ results = mesa.batch_run(
     iterations=50,
     max_steps=500,  # time
     number_processes=1,
-    data_collection_period=1,
+    data_collection_period=-1,
     display_progress=True,
 )
 
 results_df = pd.DataFrame(results)
 
-congestion = pd.DataFrame(results_df, columns=['Congestion'])
 crashes = pd.DataFrame(results_df, columns=['Crashes'])
-sanity = pd.DataFrame(results_df, columns=['Sanity'])
-movesByDriver = pd.DataFrame(results_df, columns=['MovesByDriver'])
+congestion_crashes = pd.DataFrame(results_df, columns=['Congestion', 'Crashes'])
+congestion_sanity = pd.DataFrame(results_df, columns=['Congestion', 'Sanity'])
+sanity_crashes = pd.DataFrame(results_df, columns=['Sanity', 'Crashes'])
+movesByDrvier = pd.DataFrame(results_df, columns=['MovesByDriver']) 
+goodDrivers = pd.DataFrame(results_df, columns=['goodDriver'])['goodDriver'].tolist()
+ambulances = pd.DataFrame(results_df, columns=['ambulance'])['ambulance'].tolist()
+crazyDrivers = pd.DataFrame(results_df, columns=['crazyDriver'])['crazyDriver'].tolist()
+wannabeCrazyDrivers = pd.DataFrame(results_df, columns=['wannabeCrazyDriver'])['wannabeCrazyDriver'].tolist()
 
-""" congestion_filtered = congestion[(results_df.Step == 10)]
-crashes_filtered = crashes[(results_df.Step == 10)]
-sanity_filtered = sanity[(results_df.Step == 10)]
-movesByDriver_filtered = movesByDriver[(results_df.Step == 10)] """
+driverTypes_df = pd.DataFrame({ 'good driver': goodDrivers, 'ambulances': ambulances, 'crazyDriver': crazyDrivers, 'wannabeCrazyDrivers': wannabeCrazyDrivers }, index=list(range(0,50)))
 
-""" congestion.plot()
-crashes.plot()
-sanity.plot()
-movesByDriver.plot()
+_, ax = plt.subplots()
+driverTypes_df.plot(kind='bar', stacked=True, ax=ax)
+crashes.plot(ax=ax, color='darkred')
+
+# driverTypes_df.plot.bar(stacked=True)
 # save the model data (stored in the pandas gini object) to CSV
-results_df.to_csv("model_data.csv")
-plt.show() """
+# results_df.to_csv("model_data.csv")
+plt.show()
 
-simulation_params = {
+
+""" simulation_params = {
     "agents": UserSettableParameter(
         "slider",
         "Number of Agents",
@@ -117,4 +121,4 @@ server = mesa.visualization.ModularServer(
 )
 
 server.port = 8525
-# server.launch()
+server.launch() """
