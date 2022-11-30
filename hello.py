@@ -24,6 +24,10 @@ def run_simulation():
         return "Created simulation"
 
 @app.route("/batch")
+def batchRoute():
+    return "aqui va forma"
+
+@app.route("/run-batch")
 def runBatch():
     agents = request.args.get('agents')
     iteration = request.args.get('iteration')

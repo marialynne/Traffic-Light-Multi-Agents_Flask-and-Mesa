@@ -216,7 +216,8 @@ class CityModel(mesa.Model):
             agent) == DriverAgent]
         for driver in drivers:
             sumSanity += driver.getSanity()
-        return sumSanity / len(drivers)
+        model.currentSanity = sumSanity / len(drivers)
+        return model.currentSanity
 
     @staticmethod
     def getTimeOfTrafficLightOn(model) -> int:
