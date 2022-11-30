@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, render_template
 import mesa
 from city_model import CityModel
 import pandas as pd
@@ -25,7 +25,7 @@ def run_simulation():
 
 @app.route("/batch")
 def batchRoute():
-    return "aqui va forma"
+    return render_template('form.html')
 
 @app.route("/run-batch")
 def runBatch():
